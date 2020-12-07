@@ -22,11 +22,11 @@ class SimpleCalculatorTest {
 
     @ParameterizedTest
     @CsvSource({ // Test cases, format: input_1,input_2,output
-            "1,1,2",
-            "1,0,1",
-            "0,0,0",
-            "1,-1,0",
-            "-3,-3,-6"
+            "1,1,2.0",
+            "1,0,1.0",
+            "0,0,0.0",
+            "1,-1,0.0",
+            "-3,-3,-6.0"
     })
     void add(int input1, int input2, String expectedOutput) throws Exception {
         mockMvc.perform(get("/add?a={a}&b={b}", input1, input2))
@@ -36,11 +36,11 @@ class SimpleCalculatorTest {
 
     @ParameterizedTest
     @CsvSource({ // Test cases, format: input_1,input_2,output
-            "1,1,0",
-            "1,0,1",
-            "0,0,0",
-            "1,-1,2",
-            "-3,-3,6",
+            "1,1,0.0",
+            "1,0,1.0",
+            "0,0,0.0",
+            "1,-1,2.0",
+            "-3,-3,0.0",
     })
     void subtract(int input1, int input2, String expectedOutput) throws Exception {
         mockMvc.perform(get("/subtract?a={a}&b={b}", input1, input2))
@@ -50,12 +50,12 @@ class SimpleCalculatorTest {
 
     @ParameterizedTest
     @CsvSource({ // Test cases, format: input_1,input_2,output
-            "1,1,1",
-            "1,0,0",
-            "0,0,0",
-            "1,-1,-1",
-            "-3,-3,9",
-            "2,-4,-8"
+            "1,1,1.0",
+            "1,0,0.0",
+            "0,0,0.0",
+            "1,-1,-1.0",
+            "-3,-3,9.0",
+            "2,-4,-8.0"
     })
     void multiply(int input1, int input2, String expectedOutput) throws Exception {
         mockMvc.perform(get("/multiply?a={a}&b={b}", input1, input2))
@@ -65,8 +65,8 @@ class SimpleCalculatorTest {
 
     @ParameterizedTest
     @CsvSource({ // Test cases, format: input_1,input_2,output
-            "1,1,1",
-            "1,-1,-1",
+            "1,1,1.0",
+            "1,-1,-1.0",
             "-3,-2,1.5",
     })
     void divide(int input1, int input2, String expectedOutput) throws Exception {
@@ -83,6 +83,6 @@ class SimpleCalculatorTest {
     void divideByZeroShouldReturnBadRequest() throws Exception {
         mockMvc.perform(get("/divide?a={a}&b={b}", 5, 0))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string(Matchers.containsString("Can't divide by zero")));
+                .andExpect(status().reason("Can't divide by zero"));
     }
 }
