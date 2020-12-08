@@ -5,7 +5,9 @@ import nl.ltenwolde.calculatorapi.Operation;
 import java.util.List;
 
 public class CalculationResponse {
-    private final List<SimpleEquation> equations;
+    private List<SimpleEquation> equations;
+
+    private CalculationResponse() {}
 
     public CalculationResponse(List<SimpleEquation> equations) {
         this.equations = equations;
@@ -16,11 +18,13 @@ public class CalculationResponse {
     }
 
     public static class SimpleEquation {
-        private final int inputOne;
-        private final Operation operation;
-        private final int inputTwo;
-        private final double result;
-        private final boolean valid;
+        private int inputOne;
+        private Operation operation;
+        private int inputTwo;
+        private double result;
+        private boolean valid;
+
+        private SimpleEquation() {}
 
         public SimpleEquation(int inputOne, Operation operation, int inputTwo, double result, boolean valid) {
             this.inputOne = inputOne;
