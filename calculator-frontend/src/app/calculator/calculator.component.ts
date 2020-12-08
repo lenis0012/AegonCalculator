@@ -12,8 +12,6 @@ import {Expression, Equation, Operation, CalculationResult, OperationLabel} from
 })
 export class CalculatorComponent implements OnInit {
   expressions: Expression[] = [
-    new Expression(0, Operation.ADD, 0),
-    new Expression(0, Operation.ADD, 0),
     new Expression(0, Operation.ADD, 0)
   ];
   result$: Observable<HttpResponse<CalculationResult>>;
@@ -23,6 +21,10 @@ export class CalculatorComponent implements OnInit {
   constructor(private calculatorService: CalculatorService) { }
 
   ngOnInit(): void {
+  }
+
+  addOption(): void {
+    this.expressions.push(new Expression(0, Operation.ADD, 0));
   }
 
   onSubmit(): void {

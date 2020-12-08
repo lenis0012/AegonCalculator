@@ -14,11 +14,13 @@
         </select>
         <input type="number" [(ngModel)]="expression.inputTwo" style="width: 160px" [name]="'inputTwo_'+i">
       </div>
-      <div *ngIf="isLast">
-        <input type="submit" value="Calculate" style="margin: 0 0 10px 220px">
+      <div *ngIf="isLast" style="margin: 0 0 10px 220px">
+        <button (click)="addOption()">Add expression</button>
+        <input type="submit" value="Calculate" style="font-weight: bold">
       </div>
     </div>
   </form>
+
   <div [class]="'calc-section'">
     <label style="font-weight: bold; width: 220px">Resultaat</label>
     <div *ngIf="result$ | async as result else errorResult">

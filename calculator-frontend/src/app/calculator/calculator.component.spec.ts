@@ -1,9 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CalculatorComponent } from './calculator.component';
+import {CalculatorComponent} from './calculator.component';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {FormsModule} from '@angular/forms';
 import {Type} from '@angular/core';
+import {Operation} from '../model';
 
 describe('CalculatorComponent', () => {
   let component: CalculatorComponent;
@@ -31,17 +32,17 @@ describe('CalculatorComponent', () => {
   });
 
   it('should call the api when enterring form', () => {
-    component.operation = 'add';
-    component.inputOne = 1;
-    component.inputTwo = 2;
+    component.expressions[0].operation = Operation.ADD;
+    component.expressions[0].inputOne = 1;
+    component.expressions[0].inputTwo = 2;
 
     component.onSubmit();
     fixture.detectChanges();
 
     const request = httpMock.expectOne(req => req.url.includes('calculate'));
-    expect(request.request.body.inputOne).toBe(1);
-    expect(request.request.body.operation).toBe('add');
-    expect(request.request.body.inputTwo).toBe(2);
-    request.flush({data: 3});
+    expect(request.request.body.expressions[0].inputOne).toBe(1);
+    expect(request.request.body.expressions[0].operation).toBe('ADD');
+    expect(request.request.body.expressions[0].inputTwo).toBe(2);
+    request.flush({equations: []});
   });
 });
