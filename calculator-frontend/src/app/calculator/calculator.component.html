@@ -1,25 +1,35 @@
 <h3>Calculator</h3>
 
 <div>
-  <div [class]="'calc-section'">
-    <label style="font-weight: bold; width: 220px">Berekening</label>
-    <form (ngSubmit)="onSubmit()">
-      <input type="number" [(ngModel)]="inputOne" style="width: 160px" name="inputOne">
-      <select [(ngModel)]="operation" name="opperation">
-        <option [value]="'add'">+</option>
-        <option [value]="'subtract'">-</option>
-        <option [value]="'multiply'">*</option>
-        <option [value]="'divide'">/</option>
-      </select>
-      <input type="number" [(ngModel)]="inputTwo" style="width: 160px" name="inputTwo">
-      <br/>
-      <input type="submit" value="Calculate">
-    </form>
-  </div>
+  <form (ngSubmit)="onSubmit()">
+    <div *ngFor="let expression of expressions; index as i; last as isLast">
+      <div [class]="'calc-section'">
+        <label style="font-weight: bold; width: 220px">Berekening</label>
+        <input type="number" [(ngModel)]="expression.inputOne" style="width: 160px" [name]="'inputOne_'+i">
+        <select [(ngModel)]="expression.operation" [name]="'opperation_'+i">
+          <option [value]="'ADD'">+</option>
+          <option [value]="'SUBTRACT'">-</option>
+          <option [value]="'MULTIPLY'">*</option>
+          <option [value]="'DIVIDE'">/</option>
+        </select>
+        <input type="number" [(ngModel)]="expression.inputTwo" style="width: 160px" [name]="'inputTwo_'+i">
+      </div>
+      <div *ngIf="isLast">
+        <input type="submit" value="Calculate" style="margin: 0 0 10px 220px">
+      </div>
+    </div>
+  </form>
   <div [class]="'calc-section'">
     <label style="font-weight: bold; width: 220px">Resultaat</label>
     <div *ngIf="result$ | async as result else errorResult">
-      Calculation result from server: {{result.body}}
+      <div *ngFor="let equation of result.body.equations">
+        <div *ngIf="equation.valid">
+          {{equation.inputOne}} {{operationLabels.get(equation.operation)}} {{equation.inputTwo}} = {{equation.result}}
+        </div>
+        <div [style]="{color: '#B71C1C'}" *ngIf="!equation.valid">
+          {{equation.inputOne}} {{operationLabels.get(equation.operation)}} {{equation.inputTwo}} is not a valid expression
+        </div>
+      </div>
     </div>
 
     <ng-template #errorResult>

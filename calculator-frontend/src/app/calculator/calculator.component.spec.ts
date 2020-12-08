@@ -38,9 +38,10 @@ describe('CalculatorComponent', () => {
     component.onSubmit();
     fixture.detectChanges();
 
-    const request = httpMock.expectOne(req => req.url.includes('add'));
-    expect(request.request.params.get('a')).toBe('1');
-    expect(request.request.params.get('b')).toBe('2');
+    const request = httpMock.expectOne(req => req.url.includes('calculate'));
+    expect(request.request.body.inputOne).toBe(1);
+    expect(request.request.body.operation).toBe('add');
+    expect(request.request.body.inputTwo).toBe(2);
     request.flush({data: 3});
   });
 });
