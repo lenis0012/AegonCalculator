@@ -13,18 +13,20 @@ programs to get set up.
 * Java 11 (any sdk)
 * Node.js (12.x recommended)
 * Angular CLI (`npm i -g @angular/cli`)
+* PostgreSQL 10+ (or docker-compose)
 
 Dependency set up:
 * Front-end: `npm install`
 
 # Running locally
 
-1. Start the api using `./mvnw spring-boot:run`
-2. Start the front-end using `ng serve -o`
+1. Start a postgreSQL database (or run `docker-compose up -d database`)
+2. Start the api using `./mvnw spring-boot:run`
+3. Start the front-end using `ng serve -o`
 
 # Running the tests
 
-1. Run the back-end tests in JUnit using `./mvnw test`
+1. Run the back-end tests in JUnit using `./mvnw test` (JUnit test use an H2 in-memory database)
 2. Run the front-end component tests using `ng test`
 
 # Additional information

@@ -3,41 +3,42 @@ package nl.ltenwolde.calculatorapi.controller;
 import nl.ltenwolde.calculatorapi.CalculationException;
 import nl.ltenwolde.calculatorapi.model.CalculationRequest;
 import nl.ltenwolde.calculatorapi.model.CalculationResponse;
+import nl.ltenwolde.calculatorapi.model.SimpleEquation;
+import nl.ltenwolde.calculatorapi.repository.EquationRepository;
 import nl.ltenwolde.calculatorapi.service.SimpleCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Collectors;
 
-@RequestMapping("/")
+@RequestMapping("/equations")
 @RestController
 public class CalculatorController {
     private final SimpleCalculator simpleCalculator;
+    private final EquationRepository equationRepository;
 
     @Autowired
-    public CalculatorController(SimpleCalculator simpleCalculator) {
+    public CalculatorController(SimpleCalculator simpleCalculator, EquationRepository equationRepository) {
         this.simpleCalculator = simpleCalculator;
+        this.equationRepository = equationRepository;
     }
 
-    @PostMapping("calculate")
-    public CalculationResponse calculate(@RequestBody CalculationRequest request) {
+    @PostMapping("")
+    public CalculationResponse post(@RequestBody CalculationRequest request) {
         var equations = request.getExpressions().stream()
                 .map(expression -> {
                     try {
                         double result = simpleCalculator.calculate(expression.getInputOne(), expression.getOperation(), expression.getInputTwo());
-                        return new CalculationResponse.SimpleEquation(
+                        return new SimpleEquation(
                                 // Input expression
                                 expression.getInputOne(), expression.getOperation(), expression.getInputTwo(),
                                 // Result
                                 result, true
                         );
                     } catch (CalculationException e) {
-                        return new CalculationResponse.SimpleEquation(
+                        return new SimpleEquation(
                                 // Input expression
                                 expression.getInputOne(), expression.getOperation(), expression.getInputTwo(),
                                 // Result
@@ -46,11 +47,19 @@ public class CalculatorController {
                     }
                 }).collect(Collectors.toList());
 
-        if(equations.stream().noneMatch(CalculationResponse.SimpleEquation::isValid) &&
+        equationRepository.saveAll(equations);
+
+        if(equations.stream().noneMatch(SimpleEquation::isValid) &&
                 request.getExpressions().size() > 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No calculations were successful");
         }
 
-        return new CalculationResponse(equations);
+        // Return the results of the expressions, ordered
+        return new CalculationResponse(equationRepository.findAllByOrderByIdDesc());
+    }
+
+    @GetMapping("")
+    public CalculationResponse getAll() {
+        return new CalculationResponse(equationRepository.findAllByOrderByIdDesc());
     }
 }

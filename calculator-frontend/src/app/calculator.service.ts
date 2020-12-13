@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
 import {CalculationRequest, CalculationResult, Expression} from './model';
 
 @Injectable({
@@ -13,7 +12,13 @@ export class CalculatorService {
   calculate(expressions: Expression[]): Observable<HttpResponse<CalculationResult>> {
     const request = new CalculationRequest(expressions);
 
-    return this.http.post<CalculationResult>('/api/calculate', request, {
+    return this.http.post<CalculationResult>('/api/equations', request, {
+      observe: 'response'
+    });
+  }
+
+  getEquations(): Observable<HttpResponse<CalculationResult>> {
+    return this.http.get<CalculationResult>('/api/equations', {
       observe: 'response'
     });
   }

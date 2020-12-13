@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {CalculatorService} from '../calculator.service';
-import {Observable, ObservableInput, Subject, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {Observable, Subject, throwError} from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import {HttpResponse} from '@angular/common/http';
-import {Expression, Equation, Operation, CalculationResult, OperationLabel} from '../model';
+import {Expression, Operation, CalculationResult, OperationLabel} from '../model';
 
 @Component({
   selector: 'app-calculator',
@@ -21,6 +21,7 @@ export class CalculatorComponent implements OnInit {
   constructor(private calculatorService: CalculatorService) { }
 
   ngOnInit(): void {
+    this.result$ = this.calculatorService.getEquations();
   }
 
   addOption(): void {

@@ -27,8 +27,10 @@ describe('CalculatorComponent', () => {
   afterEach(() => {
     httpMock.verify();
   });
+
   it('should create', () => {
     expect(component).toBeTruthy();
+    httpMock.expectOne('/api/equations');
   });
 
   it('should call the api when enterring form', () => {
@@ -39,7 +41,8 @@ describe('CalculatorComponent', () => {
     component.onSubmit();
     fixture.detectChanges();
 
-    const request = httpMock.expectOne(req => req.url.includes('calculate'));
+    httpMock.expectOne(req => req.url.includes('/api/equations') && req.method === 'GET');
+    const request = httpMock.expectOne(req => req.url.includes('/api/equations') && req.method === 'POST');
     expect(request.request.body.expressions[0].inputOne).toBe(1);
     expect(request.request.body.expressions[0].operation).toBe('ADD');
     expect(request.request.body.expressions[0].inputTwo).toBe(2);

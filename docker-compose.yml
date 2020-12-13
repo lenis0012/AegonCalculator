@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: aegon
+      POSTGRES_PASSWORD: aegon
+      POSTGRES_DB: aegon_calculator
+    ports:
+      - '5432:5432'
